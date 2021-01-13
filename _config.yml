@@ -20,7 +20,7 @@ image_alt: A minimalistic jekyll theme for academic    # image description
 # -----------SITE SETTINGS---------------#
 #========================================#:
 author: Andrea Karlova
-profile_image: /assets/img/avatar/cropped.png #/assets/img/avatar/avatar.jpeg
+profile_image: /assets/img/avatar/andrea-karlova.jpeg
 occupation:
 snippet:
 twitter: Andrea_Karlova
