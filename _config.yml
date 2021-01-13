@@ -92,12 +92,13 @@ include:
   - _posts
 
 exclude:
-  - .sass-cache/
-  - .jekyll-cache/
-  - gemfiles/
+  - Dumbatron.gemspec
   - Gemfile
   - Gemfile.lock
+  - gemfiles/
+  - .jekyll-cache/
   - node_modules/
+  - .sass-cache/
   - vendor/bundle/
   - vendor/cache/
   - vendor/gems/
