@@ -4,12 +4,14 @@ permalink: /about.html
 title: About Me
 description: Get to know what I'm up too
 header-img: 
-last-updated: 2020-10-30 5:55 PM
+last-updated: 2022-03-17 0:39 AM
 ---
 
 <h1 class="mx-auto" style="font-family:Courgette;">{{ page.title }}</h1>
 
-I am a research student at UCL. I am interested in designing molecular representations that can speed up drug and novel materials discovery.
+I am a PhD student at University College London. 
+I am interested in designing molecular representations that can speed up discovery of new drug designs 
+and discovery of novel materials.
 I hope that my work is a small step that can improve healthcare worldwide and tackle climate change. 
 I decided to focus my attention on speeding up the discovery of the novel semi-conductors, which I believe can help achieve nearly zero-energy buildings, solar vehicles, portable electronic devices, to name amongst many.  In drug discovery, I have been lucky to work on projects with [April19](https://www.april19.ai/) related to the discovery of novel molecules penetrating the central nervous system. 
 These are useful in enhancing the brain's neuroplasticity with applicability to mental health treatment. 
