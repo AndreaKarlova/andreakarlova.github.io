@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html>
+  <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!--
+  The above 2 meta tags *must* come first in the <head>
+  to consistently ensure proper document rendering.
+  Any other head element should come *after* these tags.
+ -->
+<title>Andrea Karlova</title>
+<!-- Set the base URL for all relative URLs within the document -->
+<base href="https://andreakarlova.github.io/">
+
+<!--
+  Allows control over where resources are loaded from.
+  Place as early in the <head> as possible, as the tag  
+  only applies to resources that are declared after it.
+-->
+
+<!-- Short description of the document (limit to 150 characters) -->
+<!-- This content *may* be used as a part of search engine results. -->
+<meta name="description" content="a minimalistic jekyll theme for academics">
+
+<!-- Control the behavior of search engine crawling and indexing -->
+<meta name="robots" content="index,follow"><!-- All Search Engines -->
+<meta name="googlebot" content="index,follow"><!-- Google Specific -->
+
+<!-- Verify website ownership -->
+<meta name="google-site-verification" content=""><!-- Google Search Console -->
+<meta name="yandex-verification" content=""><!-- Yandex Webmasters -->
+<meta name="msvalidate.01" content=""><!-- Bing Webmaster Center -->
+<meta name="alexaVerifyID" content=""><!-- Alexa Console -->
+<meta name="p:domain_verify" content=""><!-- Pinterest Console-->
+<meta name="norton-safeweb-site-verification" content=""><!-- Norton Safe Web -->
+
+<!-- Allows control over how referrer information is passed -->
+<meta name="referrer" content="no-referrer">
+
+<!-- Disable automatic detection and formatting of possible phone numbers -->
+<meta name="format-detection" content="telephone=true">
+
+<!-- Completely opt out of DNS prefetching by setting to "off" -->
+<meta http-equiv="x-dns-prefetch-control" content="on">
+
+<!-- Geo tags -->
+<!-- meta name="ICBM" content="latitude, longitude"-->
+<!-- meta name="geo.position" content="latitude;longitude"-->
+<!-- meta name="geo.region" content="country[-state]"><Country code (ISO 3166-1): mandatory, state code (ISO 3166-2): optional; eg. content="US" / content="US-NY" -->
+<!-- meta name="geo.placename" content="city/town"><eg. content="New York City" -->
+
+<!-- Link to an external CSS file -->
+<link href="https://fonts.googleapis.com/css2?family=Parisienne&family=Courgette&display=swap" rel="stylesheet">
+
+<link rel="stylesheet" href="/css/main.css">
+<!-- BootStrap CDN --> 
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
+<script src="https://kit.fontawesome.com/32a2b2a489.js" crossorigin="anonymous"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script> 
+
+<!--  GIT TALK CDN  for comment system -->
+<!--
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1/dist/gitalk.min.js"></script> -->
+
+
+<!-- Provides information about an author or another person -->
+<link rel="me" href="mailto:akarlova@cs.ucl.ac.uk">
+<link rel="me" href="sms:+">
+
+<!-- Open Search -->
+<!-- link rel="search" href="/open-search.xml" type="application/opensearchdescription+xml" title="Search Title" -->
+
+<!-- Feeds -->
+<!-- link rel="alternate" href="https://feeds.feedburner.com/example" type="application/rss+xml" title="RSS" -->
+<!-- link rel="alternate" href="https://example.com/feed.atom" type="application/atom+xml" title="Atom 0.3" -->
+
+<!-- For IE 10 and below -->
+<!-- Place favicon.ico in the root directory - no tag necessary -->
+<link rel="apple-touch-icon" sizes="180x180" href="/assets/img/icons/apple-touch-icon.png">
+<link rel="icon" type="image/png" sizes="32x32" href="/assets/img/icons/favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="/assets/img/icons/favicon-16x16.png">
+<link rel="mask-icon" href="/assets/img/icons/safari-pinned-tab.svg" color="#5bbad5">
+
+<meta property="fb:app_id" content="">
+<meta property="og:url" content="/about.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Get to know what I'm up to">
+<meta property="og:image" content="">
+<meta property="og:image:alt" content="">
+<meta property="og:description" content="Get to know what I'm up to">
+<meta property="og:site_name" content="About Me">
+<meta property="og:locale" content="en_US">
+<meta property="article:author" content="">
+
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@">
+<meta name="twitter:creator" content="@">
+<meta name="twitter:url" content="/about.html">
+<meta name="twitter:title" content="Get to know what I'm up to">
+<meta name="twitter:description" content="Get to know what I'm up to">
+<meta name="twitter:image" content="">
+<meta name="twitter:image:alt" content="">
+
+<!-- Used for adding in-document CSS -->
+
+
+
+<!-- JavaScript & No-JavaScript tags -->
+
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-ho+j7jyWK8fNQe+A12Hb8AhRq26LrZ/JpcUGGOn+Y7RsweNrtN/tE3MoK7ZeZDyx" crossorigin="anonymous"></script>
+<!--
+<script>
+    $(document).ready(function() {
+        $(".toast").toast('show');
+    });
+</script> -->
+<noscript>
+  <!-- No JS alternative -->
+</noscript>
+  <body>
+    <nav class="navbar navbar-expand-lg text-white" style="background-color:#00334e;">
+  <a class="navbar-brand text-white" href="/index.html"><h4 style="font-family:Courgette;">Andrea Karlova</h4></a>
+  <button class="navbar-toggler text-white" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <i class="fas fa-caret-down"></i>
+  </button>
+  <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <ul class="navbar-nav mr-auto">
+        
+              <li class="nav-item">
+                  <a href="about.html" class="nav-link text-white">About</a>
+              </li>
+        
+              <li class="nav-item">
+                  <a href="publications.html" class="nav-link text-white">Publications</a>
+              </li>
+        
+              <li class="nav-item">
+                  <a href="/assets/pdf/cv.pdf" class="nav-link text-white">CV</a>
+              </li>
+        
+              <li class="nav-item">
+                  <a href="blog.html" class="nav-link text-white">Blog</a>
+              </li>
+        
+    </ul>
+    <ul class="navbar-nav  justify-content-end">
+      <li class="nav-item">
+        <!-- Displays Social Media Icons based on _config.yml settings -->
+
+<span style="color: White;">
+    <i> &nbsp;&nbsp; </i>
+        <a class="social-link" href="https://twitter.com/Andrea_Karlova">
+            <span style="color: White;">
+                <i class="fab fa-twitter-square fa-lg"></i></a>
+            </span>
+    
+        <a href="https://github.com/andreakarlova">
+            <span style="color: White;">
+            <i class="fab fa-github-square fa-lg"></i></a>
+        </span>
+    
+        <a href="https://www.linkedin.com/in/andrea-karlova-b3b9342">
+            <span style="color: White;">
+                <i class="fab fa-linkedin fa-lg"></i></a>
+            </span>
+    
+        <a href="https://codepen.io/">
+            <span style="color: White;">
+                <i class="fab fa-codepen fa-lg"></i></a>
+            </span>
+    
+        <a href="https://stackoverflow.com/users/story/">
+            <span style="color: White;">
+                <i class="fab fa-stack-overflow fa-lg"></i></a>
+            </span>
+    <i> &nbsp;&nbsp; </i>
+</span>
+
+      </li>
+    </ul>
+    <form class="form-inline my-2 my-lg-0">
+      <input class="form-control mr-sm-2" type="search" placeholder="Ask me anything" aria-label="Search">
+      <button class="btn btn-light btn-sm my-2 my-sm-0" type="submit">Search</button>
+    </form> 
+  </div>
+</nav>
+
+    <div class="dumbarton-spacer-sm"></div>
+    <div class="container">
+      
+      <div class="card mb-3 border-0">
+          <div class="card-body">
+            <p class="card-text">
+                <h1 class="mx-auto" style="font-family:Courgette;">About Me</h1>
+<p>At University College London (UCL), my PhD research tackles complex challenges in drug discovery and generative modelling. I have actively contributed to identifying hits for MurD Ligase and mapped binding sites for SARS-CoV-2 (nsp13 and nsp3) utilizing 3D interaction fingerprints. My collaborative research also extended to materials discovery, where I worked on quantum chemistry computations for perovskite photovoltaics. Beyond my own research, I have co-supervised over 10 MSc theses and served as a Teaching Assistant for Bayesian Deep Learning Methods at UCL.</p>
+
+<div style="float: left; width: 40%; max-width: 350px; margin-right: 30px; margin-bottom: 20px; margin-top: 10px;">
+    <img src="/assets/img/dog.jpg" alt="My Dog" style="max-width: 100%; height: auto; border-radius: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15);" />
+</div>
+
+<p>I am equally committed to translating research into real-world applications and have consistently bridged the gap between academia and industry. Most recently, as an ML Research Scientist at Matterhorn Studio, I executed advanced Bayesian optimization projects in direct collaboration with Novo Nordisk. Prior to this, I served as the ML Technical Lead at London North Eastern Railway (LNER), where I designed an ISO27007-compliant AWS MLOps infrastructure and managed a technical team to deploy production-ready AI models. My first hands-on drug discovery experience started as ML R&amp;D Consultant for April19 Discovery, where I specialized in molecular drug design for the central nervous system using generative models and multi-task DNNs.</p>
+
+<p>If we zoom out, my background is quite diverse! I have over 15 years of experience across tech, research, and finance. Previously, I led the Data Science team at Fractal Labs, where we built a full production pipeline using TensorFlow Extended and secured a £300k InnovateUK grant. Before making the jump into machine learning, I built a strong foundation in applied mathematical modeling through visiting research engagements at Imperial College London, Columbia University, and the Oxford-Man Institute. I originally began my career spending several years in quantitative finance, pricing exotic financial derivatives at KBC Global Services and consulting for PwC.</p>
+
+<p>When I step away from the research and mathematical modelling, my pursuits get a bit more unconventional. I am the creator behind an artistic project best described as a multi-species, multicultural alter ego. I cannot reveal my artistic identity publicly—Banksy already has the anonymous artist market cornered!—but figuring out how to successfully sell the work while juggling a constant stream of new ideas is a fascinating exploration all its own. I am also planning to merge my creative side with my deep appreciation for canine intelligence; I am currently designing art classes specifically for dogs, which I hope to launch later this year.</p>
+
+<div style="clear: both;"></div>
+
+            </p>
+            
+              <p class="card-text"><small class="text-muted">Last updated 2026-02-09</small></p>
+            
+        </div>
+      </div>
+      
+    </div>
+    <div class="dumbarton-spacer"></div>
+    <div class="navbar navbar-default navbar-fixed-bottom">
+  <div class="container">
+    <p class="navbar-text pull-left">
+        &copy; 2026 Andrea Karlova
+    </p>
+    <p class="navbar-text pull-right">
+            <!-- Displays Social Media Icons based on _config.yml settings -->
+
+<span style="color: Black;">
+    <i> &nbsp;&nbsp; </i>
+        <a class="social-link" href="https://twitter.com/Andrea_Karlova">
+            <span style="color: Black;">
+                <i class="fab fa-twitter-square fa-lg"></i></a>
+            </span>
+    
+        <a href="https://github.com/andreakarlova">
+            <span style="color: Black;">
+            <i class="fab fa-github-square fa-lg"></i></a>
+        </span>
+    
+        <a href="https://www.linkedin.com/in/andrea-karlova-b3b9342">
+            <span style="color: Black;">
+                <i class="fab fa-linkedin fa-lg"></i></a>
+            </span>
+    
+        <a href="https://codepen.io/">
+            <span style="color: Black;">
+                <i class="fab fa-codepen fa-lg"></i></a>
+            </span>
+    
+        <a href="https://stackoverflow.com/users/story/">
+            <span style="color: Black;">
+                <i class="fab fa-stack-overflow fa-lg"></i></a>
+            </span>
+    <i> &nbsp;&nbsp; </i>
+</span>
+
+    </p>
+  </div>
+</div> 
+
+<script>
+  $(function () {
+    $('[data-toggle="popover"]').popover()
+  })
+</script>
+  </body>
+</html>
