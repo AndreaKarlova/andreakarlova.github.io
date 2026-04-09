@@ -9,7 +9,7 @@ last-updated: 2026-02-09
 
 <h1 class="mx-auto" style="font-family:Courgette;">{{ page.title }}</h1>
 
-I am in my final year of a PhD in Computer Science at University College London, bridging the gap between advanced machine learning and computational sciences. My research leverages methods like generative modeling, Bayesian inference, and geometric deep learning to tackle complex problems in drug discovery and the design of novel materials. I hope that my work is a small step that can help improve healthcare worldwide as well as tackle climate change. 
+I am a PhD researcher in Computer Science at University College London. My research focuses on designing advanced molecular representations to accelerate de novo drug design and the discovery of novel materials. Ultimately, I hope my computational work serves as a stepping stone toward improving global healthcare and mitigating the impacts of climate change.
 
 Alongside my PhD, I have actively applied my research directly in industry. Most recently, I worked as an ML Research Scientist at Matterhorn Studio where I collaborated with Novo Nordisk on advanced Bayesian optimization projects until June 2025. Previously, I led ML deployment and managed MLOps infrastructure as the ML Technical Lead at London North Eastern Railway (LNER). I have also specialized in molecular drug design for the central nervous system as an ML R&D Consultant with [April19](https://www.april19.ai/), focusing on novel molecules that enhance the brain's neuroplasticity for mental health treatments.
 
