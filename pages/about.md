@@ -2,19 +2,17 @@
 layout: page
 permalink: /about.html
 title: About Me
-description: Get to know what I'm up too
+description: Get to know what I'm up to
 header-img: 
-last-updated: 2024-08-7
+last-updated: 2026-02-09
 ---
 
 <h1 class="mx-auto" style="font-family:Courgette;">{{ page.title }}</h1>
 
-I am a PhD student at University College London. 
-I am interested in designing molecular representations that can speed up discovery of new drug designs 
-and discovery of novel materials.
-I hope that my work is a small step that can improve healthcare worldwide and tackle climate change. 
+I am in my final year of a PhD in Computer Science at University College London, bridging the gap between advanced machine learning and computational sciences. My research leverages methods like generative modeling, Bayesian inference, and geometric deep learning to tackle complex problems in drug discovery and the design of novel materials. I hope that my work is a small step that can help improve healthcare worldwide as well as tackle climate change. 
 
-I have over 10 years of experience in tech, academia and the financial industry. I led the Data Science team in fintech startup Fractal Labs (Tomato Pay). I also built and led the Machine Learning team for high-speed train operator LNER. Before switching to Tech, I spent 7 years by full-time research, including holding visitor research positions at Columbia University, Oxford-Man Institute and University College London working on quantitative finance research with Pat Hagan. Early in my career, I spent five years working for Belgium financial group KBC and as a consultant for PwC. 
+Alongside my PhD, I have actively applied my research directly in industry. Most recently, I worked as an ML Research Scientist at Matterhorn Studio where I collaborated with Novo Nordisk on advanced Bayesian optimization projects until June 2025. Previously, I led ML deployment and managed MLOps infrastructure as the ML Technical Lead at London North Eastern Railway (LNER). I have also specialized in molecular drug design for the central nervous system as an ML R&D Consultant with [April19](https://www.april19.ai/), focusing on novel molecules that enhance the brain's neuroplasticity for mental health treatments.
 
-I believe in peace, respecting and protecting the human rights, improving the lives of all beings and protecting our ecosystems. 
+In total, I bring over 15 years of experience spanning technology, academia, and the financial industry. I previously led the Data Science team at the fintech startup Fractal Labs (Tomato Pay), where we successfully secured InnovateUK backing for AI development. Before switching to tech, I spent several years in full-time research, holding visiting research engagements at Imperial College London, Columbia University, Oxford-Man Institute, and UCL, working on quantitative finance and quantitative modeling methodologies. I began my career spending five years in quantitative finance roles at Belgian financial group KBC and as a consultant for PwC.
 
+Ultimately, my research is guided by a deep commitment to human dignity, global well-being, and the protection of our ecosystems. This profound respect for the natural world extends into my daily life; beyond academia, my dog is a constant reminder of the diverse forms intelligence can take. It is a joy to observe how a differently wired brain processes the world, achieving remarkable things through complex, non-human sensors like smell.
