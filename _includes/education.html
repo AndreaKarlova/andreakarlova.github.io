@@ -2,7 +2,9 @@
         <ul class="list-unstyled">
         {% for entry in site.data.education %}
           <li class="media">
-            <img src="{{ entry.Icon }}" class="mr-3" alt="...">
+            {% if entry.Icon %}
+            <img src="{{ entry.Icon }}" class="mr-3" alt="..." style="width: 64px; height: 64px; object-fit: contain;">
+            {% endif %}
             <div class="media-body">
               <h5>{{ entry.School }}</h5>
               <p><i>{{ entry.Program }}</i></p>
