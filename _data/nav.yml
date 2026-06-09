@@ -10,5 +10,5 @@ links:
 - title: CV
   url: /assets/pdf/cv.pdf
 
-- title: Blog
-  url: blog.html
+# - title: Blog
+#   url: blog.html
