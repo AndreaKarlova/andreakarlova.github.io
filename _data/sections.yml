@@ -6,6 +6,6 @@
 
 - name: Blogs
   id: blogs
-  description: My Blogs
+  description: Blogs
   url: blog.html
   first: false
