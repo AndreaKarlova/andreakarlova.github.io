@@ -5,7 +5,9 @@ layout: page
          
 <!-- Blog Post -->
   <div class="card"  style="max-width: 100%;">
-    <img class="card-img-top" src="http://placehold.it/750x300" alt="Card image cap">
+    {% if page.image %}
+    <img class="card-img-top" src="{{ page.image }}" alt="{{ page.title }}">
+    {% endif %}
     <div class="card-body">
       <h1 class="card-title" style="font-family:Courgette;">{{ page.title }}</h1>
       {% if page.author %}
