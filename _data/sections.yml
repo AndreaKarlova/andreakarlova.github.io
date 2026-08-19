@@ -4,7 +4,7 @@
   url: publications.html
   first: true
   
-- name: Blog
-  id: blog
-  description: My Blog
+- name: Blogs
+  id: blogs
+  description: My Blogs
   url: blog.html

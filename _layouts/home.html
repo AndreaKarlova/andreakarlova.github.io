@@ -68,7 +68,11 @@ layout: default
           </li>
         {% else %}
           <li class="nav-item">
+            {% if section.id == 'blogs' %}
+              <a class="nav-link text-light" href="/{{section.url}}">{{section.name}}</a>
+            {% else %}
               <a class="nav-link text-light"  href="#{{section.id}}" role="tab" aria-controls="{{section.id}}" aria-selected="false">{{section.name}}</a>
+            {% endif %}
           </li>
         {% endif %}
       {% endfor %}
@@ -161,8 +165,10 @@ layout: default
 <!--JS FUNCTION FOR RECENT WORK SECTION -->
 <script>
     $('#test-list a').on('click', function (e) {
-    e.preventDefault()
-    $(this).tab('show')
+      if ($(this).attr('href').startsWith('#')) {
+        e.preventDefault()
+        $(this).tab('show')
+      }
     })
 </script> 
 
