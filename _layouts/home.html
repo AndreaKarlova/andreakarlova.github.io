@@ -69,7 +69,7 @@ layout: default
         {% else %}
           <li class="nav-item">
             {% if section.id == 'blogs' %}
-              <a class="nav-link text-light" href="/{{section.url}}">{{section.name}}</a>
+              <a class="nav-link text-light" href="/{{section.url}}" onclick="window.location.href='/{{section.url}}'; return false;">{{section.name}}</a>
             {% else %}
               <a class="nav-link text-light"  href="#{{section.id}}" role="tab" aria-controls="{{section.id}}" aria-selected="false">{{section.name}}</a>
             {% endif %}
@@ -189,27 +189,30 @@ $('body').scrollspy({ target: '#list-example' })
 
 
 <script>
-var ctx = document.getElementById('myBarChart').getContext('2d');
-var myBarChart = new Chart(ctx, {
-    type: 'horizontalBar',
-    data: {
-        labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-        datasets: [{
-            label: 'My Skills',
-            data: [12, 19, 3, 5, 2, 3],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        scales: {
-            yAxes: [{
-                ticks: {
-                    beginAtZero: true
-                }
-            }]
-        }
-    }
-});
+var chartEl = document.getElementById('myBarChart');
+if (chartEl) {
+  var ctx = chartEl.getContext('2d');
+  var myBarChart = new Chart(ctx, {
+      type: 'horizontalBar',
+      data: {
+          labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
+          datasets: [{
+              label: 'My Skills',
+              data: [12, 19, 3, 5, 2, 3],
+              borderWidth: 1
+          }]
+      },
+      options: {
+          scales: {
+              yAxes: [{
+                  ticks: {
+                      beginAtZero: true
+                  }
+              }]
+          }
+      }
+  });
+}
 </script>
 
 
