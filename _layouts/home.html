@@ -64,11 +64,11 @@ layout: default
       {% for section in site.data.sections %}
         {% if section.first %}
           <li class="nav-item">
-            <a class="nav-link active" href="#{{section.id}}" role="tab" aria-controls="{{section.id}}}" aria-selected="true">{{section.name}}</a>
+            <a class="nav-link active" data-toggle="tab" href="#{{section.id}}" role="tab" aria-controls="{{section.id}}" aria-selected="true">{{section.name}}</a>
           </li>
         {% else %}
           <li class="nav-item">
-              <a class="nav-link text-light"  href="#{{section.id}}" role="tab" aria-controls="{{section.id}}" aria-selected="false">{{section.name}}</a>
+              <a class="nav-link text-light" data-toggle="tab" href="#{{section.id}}" role="tab" aria-controls="{{section.id}}" aria-selected="false">{{section.name}}</a>
           </li>
         {% endif %}
       {% endfor %}
