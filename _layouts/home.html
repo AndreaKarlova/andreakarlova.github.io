@@ -68,11 +68,7 @@ layout: default
           </li>
         {% else %}
           <li class="nav-item">
-            {% if section.id == 'blogs' %}
-              <a class="nav-link text-light" href="/{{section.url}}" onclick="window.location.href='/{{section.url}}'; return false;">{{section.name}}</a>
-            {% else %}
               <a class="nav-link text-light"  href="#{{section.id}}" role="tab" aria-controls="{{section.id}}" aria-selected="false">{{section.name}}</a>
-            {% endif %}
           </li>
         {% endif %}
       {% endfor %}
@@ -144,6 +140,19 @@ layout: default
                 {% endfor %}
                 </div>
 
+              </div>
+            {% elsif section.name == "Blogs" %}
+              <div class="tab-pane overflow-auto" id="{{section.id}}" role="tabpanel" aria-labelledby="{{section.id}}-tab">
+                <h5 class="card-title text-center" style="font-family:Courgette;"><a href="/{{ section.url }}" class="highlighted">{{section.description}}</a></h5>
+                <ol>
+                {% for post in site.posts %}
+                  <li>
+                    <a href="{{ post.url }}"><strong>{{ post.title }}</strong></a>
+                    <br><small class="text-muted">{{ post.date | date: "%B %d, %Y" }}{% if post.author %} &mdash; {{ post.author }}{% endif %}</small>
+                    {% if post.description %}<br><span>{{ post.description }}</span>{% endif %}
+                  </li>
+                {% endfor %}
+                </ol>
               </div>
             {% else %}
               <div class="tab-pane overflow-auto" id="{{section.id}}" role="tabpanel" aria-labelledby="{{section.id}}-tab">  
