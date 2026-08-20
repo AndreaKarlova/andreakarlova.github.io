@@ -13,7 +13,7 @@ layout: page
       {% if page.author %}
       <p><i>Written By: {{ page.author }}</i></p>
       {% endif %}
-      <p class="card-text">{{ content | markdownify }}</p>
+      <div class="card-text">{{ content }}</div>
       {% if site.comments %}
       <div id="gitalk-container"></div>
       {% endif %}
