@@ -119,3 +119,26 @@
 <noscript>
   <!-- No JS alternative -->
 </noscript>
+
+<!-- MathJax v3 for LaTeX rendering -->
+<script>
+MathJax = {
+  tex: {
+    inlineMath: [['$', '$'], ['\\(', '\\)']],
+    displayMath: [['$$', '$$'], ['\\[', '\\]']],
+    processEscapes: true
+  },
+  options: {
+    skipHtmlTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+  }
+};
+</script>
+<script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml.js"></script>
+
+<!-- Constrain post images to container width -->
+<style>
+.card-body img {
+  max-width: 100%;
+  height: auto;
+}
+</style>
