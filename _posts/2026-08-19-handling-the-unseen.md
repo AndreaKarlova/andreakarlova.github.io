@@ -139,6 +139,7 @@ That construction — turning this entropy into acquisition functions with consi
 - **Paper.** A. Karlová, R. Kabra, D. A. de Souza, B. Paige. *COBALT: Censored Optimization and Bayesian Active Learning Techniques.* Proceedings of the 42nd Conference on Uncertainty in Artificial Intelligence (UAI), PMLR 337:2713–2743, 2026. [proceedings](https://proceedings.mlr.press/v337/karlova26a.html) · [PDF](https://raw.githubusercontent.com/mlresearch/v337/main/assets/karlova26a/karlova26a.pdf) · [OpenReview](https://openreview.net/forum?id=47OJlKgIgG)
 - **Code.** [`github.com/AndreaKarlova/cobalt`](https://github.com/AndreaKarlova/cobalt)
 
+{% raw %}
 <details>
 <summary>BibTeX</summary>
 
@@ -159,3 +160,4 @@ That construction — turning this entropy into acquisition functions with consi
 ```
 
 </details>
+{% endraw %}
