@@ -9,12 +9,16 @@ author: Andrea Karlova
 published: true
 ---
 
-In machine learning, we usually assume that our data is observed exactly. However, real instruments have limits, and when those limits are reached, the data they return is censored. This is a structural feature of many scientific pipelines, not just a rare glitch. Censoring quietly breaks standard regression models, and addressing it properly requires a bit of measure theory.
+In machine learning, we usually assume that our data is observed exactly. The real instruments have intrinsic limits.When the measurement falls beyond a detection limit, it may be reported at the threshold, rather than at its actual value, returning thus a data point that is censored. 
+Such report is not a missing observation: it tells us that the underlying response lies in a particular tail.
+This is a structural feature of many scientific pipelines, not just an accidental occasion. 
 
-This is the first post in a short series. Here, I focus on the motivation, the censored (Tobit) measure, and a closed-form entropy for the Censored Normal distribution. Later posts will build on that entropy to derive information-theoretic acquisition functions (Censored BALD and Censored PES) for active learning and Bayesian optimization. All of the material here is drawn from our paper, [COBALT](https://proceedings.mlr.press/v337/karlova26a.html), with code available in the [repository](https://github.com/AndreaKarlova/cobalt).
+Censoring quietly breaks standard regression models, and addressing it properly requires a small excursion into the measure theory.
+
+This is the first post in a short series. We will describe the Tobit observation law, derive its entropy relative to an explicit reference measure, and explain which KL divergences are meaningful. 
+These distinctions matter when turning censored Gaussian models into information-theoretic acquisition functions.
 
 ### Motivation: Censoring is structural, not anomalous
-
 Most measurements come from instruments with bounded scales. In drug discovery, for example, a high-throughput binding assay cannot resolve affinities beyond its detection limit: it clips non-binders at a threshold $l$, so all we know about such a point is that its true value satisfies $y^\ast \ge l$. The measurement is not missing; it is present, but only as an inequality.
 
 Faced with this, two common shortcuts both introduce bias:
@@ -22,97 +26,146 @@ Faced with this, two common shortcuts both introduce bias:
 - **Drop the censored points.** Training a regressor only on the fully-resolved values truncates the distribution. This discards the information that non-binders provide ($y^\ast \ge l$) and degrades uncertainty right at the decision boundary, where it is most important.
 - **Clamp and pretend.** Treating each clipped value as if it were an exact observation and fitting a Gaussian likelihood (or equivalently, minimizing MSE) biases the fit regardless of model architecture; the loss is simply incorrect for those points.
 
-The principled alternative is to model the mixed continuous-and-discrete nature of the data directly, using a Tobit likelihood.
+The alternative is to model the recording mechanism. In what follows, “censoring” means deterministic clipping of a noisy real-valued response. It is different from truncation, where observations outside a window are omitted and the retained law must be renormalized.
 
 ### The Tobit likelihood
 
-Let $f$ be the latent function we want to recover, and let each observation carry an indicator $c_i \in \{-1, 0, 1\}$ recording whether it is left-censored, uncensored, or right-censored. With per-point bounds $l_i, u_i$ and noise $\varepsilon \sim \mathcal{N}(0,\sigma^2)$, the observation process is
+Let $f$ be the latent function we want to recover:
+$$
+z_i=f(x_i)+\varepsilon_i,\qquad \varepsilon_i\sim N(0,\sigma^2),\qquad \sigma>0.
+$$				
+				
+Let each observation carry an indicator $c_i \in \{-1, 0, 1\}$ recording whether it is left-censored, uncensored, or right-censored. With per-point bounds $l_i, u_i$ and noise $\varepsilon \sim \mathcal{N}(0,\sigma^2)$, the observation process is
 
 $$
-y_i =
+y_i = T_i(z_i)
 \begin{cases}
-l_i, & f(\mathbf{x}_i)+\varepsilon \le l_i \quad (c_i=-1),\\
-f(\mathbf{x}_i)+\varepsilon, & l_i < f(\mathbf{x}_i)+\varepsilon < u_i \quad (c_i=0),\\
-u_i, & f(\mathbf{x}_i)+\varepsilon \ge u_i \quad (c_i=1).
+l_i, & z_i \le l_i \quad (c_i=-1),\\
+z_i, & l_i < z_i < u_i \quad (c_i=0),\\
+u_i, & z_i \ge u_i \quad (c_i=1).
 \end{cases}
 $$
 
 If we write $\phi$ and $\Phi$ for the standard normal PDF and CDF, and $f_i = f(\mathbf{x}_i)$, the resulting likelihood is a continuous density in the interior and a *probit atom* at each bound:
 
 $$
-p(y_i \mid f_i, c_i) =
+L_i(f_i) =
 \begin{cases}
-\Phi\!\left(\tfrac{y_i - f_i}{\sigma}\right), & c_i = -1,\\[4pt]
+\Phi\!\left(\tfrac{l_i - f_i}{\sigma}\right), & c_i = -1,\\[4pt]
 \tfrac{1}{\sigma}\,\phi\!\left(\tfrac{y_i - f_i}{\sigma}\right), & c_i = 0,\\[4pt]
-1 - \Phi\!\left(\tfrac{y_i - f_i}{\sigma}\right), & c_i = 1.
+1 - \Phi\!\left(\tfrac{u_i - f_i}{\sigma}\right), & c_i = 1.
 \end{cases}
 $$
+
+We write \(L_i(f_i)\), rather than conditioning the probability law on the realized indicator: conditional on being uncensored, the response would have a *normalized truncated Gaussian* law. The tail probabilities above account for the probability of observing the censoring event itself. The inequality in a censored report concerns \(Z_i\), the noisy response. It is not a deterministic inequality on \(f(x_i)\) when \(\sigma>0\).
 
 This setup matches the physics of the instrument closely, but it creates a mathematical issue.
 
 ### A distribution that is neither continuous nor discrete
 
-Fix a latent mean $\mu$ and censor to $[l, u]$. The observed variable then follows the Censored Normal distribution, which mixes a Gaussian density on the open window $(l,u)$ with two point masses at the boundaries:
+Fix a mean \(\mu\), a positive standard deviation \(\sigma\), and finite bounds \(l<u\). Define
 
 $$
-p(x;\mu,\sigma,l,u) \;=\; \underbrace{\Phi\!\left(\tfrac{l-\mu}{\sigma}\right)\delta_l(x)}_{\text{mass clipped to } l} \;+\; \underbrace{\phi(x;\mu,\sigma)\,\mathbb{I}_{(l,u)}(x)}_{\text{Gaussian interior}} \;+\; \underbrace{\left[1-\Phi\!\left(\tfrac{u-\mu}{\sigma}\right)\right]\delta_u(x)}_{\text{mass clipped to } u},
+a=\frac{l-\mu}{\sigma},\qquad b=\frac{u-\mu}{\sigma},\qquad
+p_l=\Phi(a),\quad p_u=\Phi(-b),\quad p_0=\Phi(b)-\Phi(a).
 $$
 
-where $\delta_z$ is a Dirac mass at $z$ and $\mathbb{I}_{(l,u)}$ indicates the window. Each atom's weight is exactly the Gaussian tail probability that is collapsed onto the boundary.
+If \(G_{\mu,\sigma}=N(\mu,\sigma^2)\), the recorded law is its pushforward under clipping:
+
+$$
+\nu_{\mu,\sigma}=T_\#G_{\mu,\sigma},\qquad
+\nu_{\mu,\sigma}(A)=G_{\mu,\sigma}(T^{-1}(A)).
+$$
+
+As a measure, it is
+
+$$
+\nu_{\mu,\sigma}(dy)=
+p_l\,\delta_l(dy)
++\frac1\sigma\phi\!\left(\frac{y-\mu}{\sigma}\right)
+\mathbf1_{(l,u)}(y)\,dy
++p_u\,\delta_u(dy).
+$$
+
+The continuous part has total mass \(p_0\), not one. There is no truncation renormalization: the remaining probability has been moved to the endpoints.
+
+A Dirac measure \(\delta_c\) assigns mass one to a measurable set containing \(c\), and zero otherwise.  Each atom's weight is exactly the Gaussian tail probability that is collapsed onto the boundary. 
+It is not an ordinary density function that can be substituted into logarithms.
+
 
 ![The Censored Normal law: a Gaussian density on the window (l, u) with two boundary atoms whose masses are the collapsed tail probabilities, over the reference measure's domain.](/assets/posts/censored_gauss_wide.png)
 *The Censored Normal distribution as a mixed measure. The window $(l,u)$ carries the interior mass $\Phi(\tfrac{u-\mu}{\sigma})-\Phi(\tfrac{l-\mu}{\sigma})$ (red), while the two arrows are the boundary atoms with weights $\Phi(\tfrac{l-\mu}{\sigma})$ and $1-\Phi(\tfrac{u-\mu}{\sigma})$ — the collapsed lower and upper tails. The red baseline marks the "measure domain," the support of the reference measure $\rho=\lambda+\delta_l+\delta_u$.*
 
-The problem is that this law is not absolutely continuous with respect to the Lebesgue measure $\lambda$: no ordinary density can put positive probability on the single points $l$ and $u$. So the usual definitions of density, expectation, and entropy, all written as Lebesgue integrals, do not apply as they are.
+## The measure-theoretic fix
+The law cannot have a density with respect to Lebesgue measure alone: a singleton has Lebesgue measure zero, but an endpoint has positive probability.
 
-### The measure-theoretic fix
-
-The clean solution is the Lebesgue decomposition theorem: any measure splits uniquely into an absolutely continuous (diffuse) part and a singular part. Here, the diffuse part is the Gaussian interior, and the singular part is the two atoms. Instead of forcing everything onto $\lambda$, we use a reference measure that already contains the atoms,
-
+Choose instead
 $$
-\rho \;=\; \lambda + \delta_l + \delta_u,
+\rho=\lambda|_{(l,u)}+\delta_l+\delta_u.
 $$
 
-and describe the Censored Normal through its Radon–Nikodym derivative $\tfrac{d\nu}{d\rho}$ with respect to $\rho$. With this reference, the law is absolutely continuous ($\nu \ll \rho$), and the density is exactly the mixed object above: it equals $\phi(x;\mu,\sigma)$ on $(l,u)$ and equals the tail masses $\Phi(\tfrac{l-\mu}{\sigma})$, $1-\Phi(\tfrac{u-\mu}{\sigma})$ at the atoms.
+This reference measure contains both the continuous observation window and the endpoint atoms. Its support is \([l,u]\). The Radon–Nikodym derivative is the ordinary measurable function:
+$$
+p_{\mu,\sigma}(y)=\frac{d\nu_{\mu,\sigma}}{d\rho}(y)=
+\begin{cases}
+p_l,&y=l,\\
+\sigma^{-1}\phi((y-\mu)/\sigma),&l<y<u,\\
+p_u,&y=u.
+\end{cases}
+$$
 
-Entropy is then well defined as the $\rho$-integral
+The distinction is important: the *measure* is written with Dirac measures; its *density relative to \(\rho\)* is written with ordinary values or indicator functions.
+
+Lebesgue decomposition describes the absolutely continuous interior and the singular atomic part relative to Lebesgue measure. The Radon–Nikodym theorem then supplies the density relative to the chosen dominating measure. These are complementary statements, not a replacement for the usual definition of expectation.
+
+For any integrable function \(g\),
 
 $$
-H[\nu] \;=\; -\int_{\mathbb{R}} \frac{d\nu}{d\rho}\,\log\frac{d\nu}{d\rho}\;d\rho,
+\mathbb E[g(Y)]=\int g\,d\nu
+=p_lg(l)+\int_l^u g(y)\frac1\sigma\phi\!\left(\frac{y-\mu}{\sigma}\right)dy+p_ug(u).
 $$
 
-which automatically sums a continuous (differential-entropy) contribution over $(l,u)$ and two discrete (Shannon) contributions at the atoms. (Note the sign convention: this is the standard $-\!\int p\log p$.)
+The law \(\nu\) should not be confused with the empirical measure of a finite sample. An empirical measure also has atoms at the observed interior values, so it is generally not dominated by this same \(\rho\).
 
 ### Warm-up: integrating against the mixed measure
 
-Before entropy, the mean shows the mechanics in miniature. Integrating $x$ against $\rho$ splits into the interior integral plus the two atom evaluations:
+Taking \(g(y)=y\) gives
 
 $$
-\mathbb{E}[Y] \;=\; \underbrace{\mu\big[\Phi(\zeta_u)-\Phi(\zeta_\ell)\big] - \sigma\big[\phi(\zeta_u)-\phi(\zeta_\ell)\big]}_{\text{truncated Gaussian interior}} \;+\; \underbrace{l\,\Phi(\zeta_\ell) + u\big[1-\Phi(\zeta_u)\big]}_{\text{Bernoulli-like atoms}},
+\mathbb E[Y]=\mu p_0+\sigma[\phi(a)-\phi(b)]+lp_l+up_u.
 $$
 
-where $\zeta_x = \tfrac{x-\mu}{\sigma}$ are the standardized bounds. The atom terms are simply each boundary value weighted by its collapsed tail probability. Notice that the correction $-\sigma[\phi(\zeta_u)-\phi(\zeta_\ell)]$ vanishes when the bounds are symmetric about the mean ($\zeta_u=-\zeta_\ell$, so $\phi(\zeta_u)=\phi(\zeta_\ell)$): symmetric clipping leaves the mean at $\mu$. Keep this in mind; the analogous term in the entropy behaves differently.
+The atom terms are simply each boundary value weighted by its collapsed tail probability.
+For bounds symmetric about \(\mu\), the mean remains \(\mu\). 
+Notice that the correction $-\sigma[\phi(a)-\phi(b)]$ vanishes when the bounds are symmetric about the mean ($a=-b$:
+symmetry cancels the interior first-moment correction because \(\phi(-d)=\phi(d)\). The analogous second-moment correction in the entropy does not cancel.
 
 ### Closed-form entropy of the Censored Normal
 
 Carrying the same decomposition through the entropy integral gives a fully closed-form result — no Monte Carlo needed. With $\zeta_x = \tfrac{x-\mu}{\sigma}$ and window mass $\Delta\Phi = \Phi(\zeta_u)-\Phi(\zeta_\ell)$:
+Define entropy **relative to the specified reference measure** by
 
 $$
-H[Y] \;=\; \log\!\big(\sqrt{2\pi e}\,\sigma\big)\,\Delta\Phi \;-\; \tfrac{1}{2}\big[\zeta_u\phi(\zeta_u)-\zeta_\ell\phi(\zeta_\ell)\big] \;-\; \Phi(\zeta_\ell)\log\Phi(\zeta_\ell) \;-\; \Phi(-\zeta_u)\log\Phi(-\zeta_u).
+H_\rho(\nu)=-\int p\log p\,d\rho,
 $$
+
+using natural logarithms and \(0\log0=0\). For the censored normal above, the integral is finite and evaluates to
+
+$$
+H_\rho(\nu)=
+p_0\log\!\big(\sqrt{2\pi e}\,\sigma\big)
+-\frac12[b\phi(b)-a\phi(a)]
+-p_l\log p_l-p_u\log p_u.
+$$
+
 
 The three pieces have clear interpretations:
 
-- **Base entropy.** $\log(\sqrt{2\pi e}\,\sigma)\,\Delta\Phi$ is the ordinary Gaussian differential entropy, scaled down by $\Delta\Phi$, the probability mass that actually falls inside the observable window.
-- **Boundary (second-moment) correction.** $-\tfrac{1}{2}\big[\zeta_u\phi(\zeta_u)-\zeta_\ell\phi(\zeta_\ell)\big]$ accounts for how clipping changes the spread of the interior; it is the truncated-variance correction to the differential-entropy term. Unlike the mean's correction above, this one does **not** vanish for symmetric bounds: there $\zeta_u\phi(\zeta_u)-\zeta_\ell\phi(\zeta_\ell)=2\tfrac{\Delta}{\sigma}\phi(\tfrac{\Delta}{\sigma})$, leaving $-\tfrac{\Delta}{\sigma}\phi(\tfrac{\Delta}{\sigma})$.
-- **Atom entropy.** $-\Phi(\zeta_\ell)\log\Phi(\zeta_\ell)-\Phi(-\zeta_u)\log\Phi(-\zeta_u)$ is the Shannon entropy of the two collapsed tails, each treated as a discrete outcome with its tail probability.
+- **Base entropy.** $p_0\log\!\big(\sqrt{2\pi e}\,\sigma\big)$ is the ordinary Gaussian differential entropy, scaled down by $\p_0$, the probability mass that actually falls inside the observable window.
+- **Boundary (second-moment) correction.** $-\frac12[b\phi(b)-a\phi(a)]$ accounts for how clipping changes the spread of the interior; it is the truncated-variance correction to the differential-entropy term. Unlike the mean's correction above, this one does **not** vanish for symmetric bounds: there $\zeta_u\phi(\zeta_u)-\zeta_\ell\phi(\zeta_\ell)=2\tfrac{\Delta}{\sigma}\phi(\tfrac{\Delta}{\sigma})$, leaving $-\tfrac{\Delta}{\sigma}\phi(\tfrac{\Delta}{\sigma})$.
+- **Atom entropy.** $-p_l\log p_l-p_u\log p_u$ is the Shannon entropy of the two collapsed tails, each treated as a discrete outcome with its tail probability. Their weights do not themselves sum to one unless there is no interior mass.
 
-Plotting the three terms as the censored fraction increases makes the trade-off clear:
-
-![Decomposition of the Censored Normal entropy into base entropy, boundary correction, and atom entropy, as a function of the fraction of mass censored.](/assets/posts/censored_entropy_decomposition.png)
-*The three terms of $H[Y]$ as more mass is censored (standard normal, symmetric bounds). The base entropy (blue) fades as the observable window shrinks; the atom entropy (green) grows as probability accumulates at the boundaries; the boundary correction (orange) stays negative. Their sum (pink) interpolates smoothly between the Gaussian entropy $\log\sqrt{2\pi e}\,\sigma$ with no censoring and $\log 2$ — two equally likely atoms — under full censoring.*
-
-**Sanity check (uncensoring).** As $l\to-\infty$ and $u\to+\infty$ we have $\Delta\Phi\to 1$; both $\zeta\phi(\zeta)$ terms vanish; and since $t\log t\to 0$ as $t\to 1$, the atom terms vanish as well. What remains is
+**Sanity check (uncensoring).** As $l\to-\infty$ and $u\to+\infty$ we have $p_0 to 1$; both $a\phi(a)$, $b\phi(b)$ terms vanish; and since $t\log t\to 0$ as $t\to 1$, the atom terms vanish as well. What remains is
 
 $$
 \lim_{l\to-\infty,\,u\to+\infty} H[Y] \;=\; \log\!\big(\sqrt{2\pi e}\,\sigma\big),
@@ -120,13 +173,83 @@ $$
 
 which is exactly the entropy of the underlying Gaussian — the formula smoothly reduces to the familiar case.
 
-**Symmetric bounds.** For $l=\mu-\Delta,\ u=\mu+\Delta$ the expression becomes
+
+An alternative decomposition makes the role of the censoring indicator explicit:
 
 $$
-H[Y] \;=\; \log\!\big(\sqrt{2\pi e}\,\sigma\big)\big[\Phi(\tfrac{\Delta}{\sigma})-\Phi(-\tfrac{\Delta}{\sigma})\big] \;-\; \tfrac{\Delta}{\sigma}\phi(\tfrac{\Delta}{\sigma}) \;-\; \Phi(-\tfrac{\Delta}{\sigma})\log\Phi(-\tfrac{\Delta}{\sigma}) \;-\; \Phi(\tfrac{\Delta}{\sigma})\log\Phi(\tfrac{\Delta}{\sigma}),
+H_\rho(Y)=H(C)+p_0\,h(Y\mid C=0),
 $$
 
-and taking $\Delta\to\infty$ recovers the Gaussian entropy again. This is a useful way to see how much entropy is removed by clipping as the window narrows.
+where \(H(C)\) is the entropy of the three-outcome probability vector \((p_l,p_0,p_u)\), and \(h(Y\mid C=0)\) is the differential entropy of the normalized truncated normal.
+**Symmetric bounds.** 
+For \(l=\mu-\Delta\), \(u=\mu+\Delta\), with \(\Delta>0\), let \(d=\Delta/\sigma\) and \(q=\Phi(-d)\). Both endpoint probabilities equal \(q\). Therefore
+
+$$
+H_\rho(Y)=(1-2q)\log\!\big(\sqrt{2\pi e}\,\sigma\big)
+-d\phi(d)-2q\log q.
+$$
+
+The boundary correction is \(-d\phi(d)\), not zero. As \(\Delta\to\infty\), the ordinary Gaussian entropy is recovered.
+
+
+Plotting the three terms as the censored fraction increases makes the trade-off clear:
+
+![Decomposition of the Censored Normal entropy into base entropy, boundary correction, and atom entropy, as a function of the fraction of mass censored.](/assets/posts/censored_entropy_decomposition.png)
+*The three terms of $H_\rho(Y)$ as more mass is censored (standard normal, symmetric bounds). The base entropy (blue) fades as the observable window shrinks; the atom entropy (green) grows as probability accumulates at the boundaries; the boundary correction (orange) stays negative. Their sum (pink) interpolates smoothly between the Gaussian entropy $\log\sqrt{2\pi e}\,\sigma$ with no censoring and $\log 2$ — two equally likely atoms — under full censoring.*
+
+
+This is a useful way to see how much entropy is removed by clipping as the window narrows.
+
+### Why the reference measure matters
+
+If the reference is changed to \(d\rho'=w\,d\rho\), with \(w>0\), then, when the expectations exist,
+
+$$
+H_{\rho'}(\nu)=H_\rho(\nu)+\mathbb E_\nu[\log w(Y)].
+$$
+
+Consequently this entropy is not a coordinate-free amount of information lost by clipping. It can also be negative. KL divergence and mutual information, rather than differences between arbitrarily chosen entropies, provide the invariant comparisons.
+
+## Which KL divergence is meaningful?
+
+For probability measures \(P,Q\),
+
+$$
+D_{\mathrm{KL}}(P\|Q)=
+\begin{cases}
+\displaystyle\int\log\frac{dP}{dQ}\,dP,&P\ll Q,\\
++\infty,&P\not\ll Q.
+\end{cases}
+$$
+
+When both have densities \(p,q\) relative to a common reference, this becomes \(\int p\log(p/q)\,d\rho\), with value \(+\infty\) if the set where \(q=0\) has positive \(P\)-probability. A common dominating measure does **not** ensure a finite KL.
+
+For an uncensored nondegenerate Gaussian \(G\) and a Gaussian law \(\nu\) clipped at at least one finite endpoint,
+
+$$
+D_{\mathrm{KL}}(G\|\nu)=D_{\mathrm{KL}}(\nu\|G)=+\infty.
+$$
+
+The first direction fails because the Gaussian assigns probability beyond the observation window. The second fails because the censored law has endpoint atoms while the Gaussian assigns zero probability to every singleton.
+
+To compare two latent models through the same instrument, compare their **two censored observation laws**. If \(P=T_\#G_1\), \(Q=T_\#G_0\), with the same bounds, then
+
+$$
+D_{\mathrm{KL}}(P\|Q)=
+p_{l,1}\log\frac{p_{l,1}}{p_{l,0}}
++\int_l^u g_1(y)\log\frac{g_1(y)}{g_0(y)}dy
++p_{u,1}\log\frac{p_{u,1}}{p_{u,0}},
+$$
+
+where \(g_j\) is the uncensored Gaussian density in the interior. No logarithms or ratios of Dirac measures are involved.
+
+Data processing gives a useful check:
+
+$$
+D_{\mathrm{KL}}(T_\#G_1\|T_\#G_0)\le D_{\mathrm{KL}}(G_1\|G_0).
+$$
+
+Clipping cannot increase the ability to distinguish the two latent models from the observation.
 
 ### Why this matters
 
@@ -136,9 +259,11 @@ That construction — turning this entropy into acquisition functions with consi
 
 ### References
 
-- **Paper.** A. Karlová, R. Kabra, D. A. de Souza, B. Paige. *COBALT: Censored Optimization and Bayesian Active Learning Techniques.* Proceedings of the 42nd Conference on Uncertainty in Artificial Intelligence (UAI), PMLR 337:2713–2743, 2026. [proceedings](https://proceedings.mlr.press/v337/karlova26a.html) · [PDF](https://raw.githubusercontent.com/mlresearch/v337/main/assets/karlova26a/karlova26a.pdf) · [OpenReview](https://openreview.net/forum?id=47OJlKgIgG)
-- **Code.** [`github.com/AndreaKarlova/cobalt`](https://github.com/AndreaKarlova/cobalt)
+- A. Karlová, R. Kabra, D. A. de Souza, B. Paige. *COBALT: Censored Optimization and Bayesian Active Learning Techniques.* Proceedings of the 42nd Conference on Uncertainty in Artificial Intelligence (UAI), PMLR 337:2713–2743, 2026. [proceedings](https://proceedings.mlr.press/v337/karlova26a.html) · [PDF](https://raw.githubusercontent.com/mlresearch/v337/main/assets/karlova26a/karlova26a.pdf) · [OpenReview](https://openreview.net/forum?id=47OJlKgIgG)
 
+- Yury Polyanskiy and Yihong Wu. *Information Theory*, MIT 6.441 course notes: divergence, mutual information, data processing, and variational characterizations. [Course notes](https://ocw.mit.edu/courses/6-441-information-theory-spring-2016/5d8f16adc3385c9ff2975b121bd620e4_MIT6_441S16_course_notes.pdf).
+
+ - **Code:** [`github.com/AndreaKarlova/cobalt`](https://github.com/AndreaKarlova/cobalt)
 <div class="bibtex-wrapper">
 <button class="copy-btn" onclick="copyBibtex(this)">📋 Copy</button>
 <pre><code id="bibtex-citation">@InProceedings{pmlr-v337-karlova26a,
