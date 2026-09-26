@@ -134,7 +134,9 @@ MathJax = {
       /* Convert kramdown's <script type="math/tex"> tags to MathJax v3 format */
       find_script_mathtex: [10, function (doc) {
         for (const node of document.querySelectorAll('script[type^="math/tex"]')) {
-          const display = !!node.type.match(/; *mode=display/);
+          const display = !!node.type.match(/; *mode=display/) ||
+                          node.textContent.includes('\n') ||
+                          node.textContent.includes('\\begin{');
           const math = new doc.options.MathItem(node.textContent, doc.inputJax[0], display);
           const text = document.createTextNode('');
           node.parentNode.replaceChild(text, node);
@@ -156,11 +158,19 @@ MathJax = {
   height: auto;
 }
 /* Allow horizontal scrolling for wide display math on mobile */
+mjx-container[display="true"],
 mjx-container[jax="CHTML"][display="true"] {
-  overflow-x: auto;
-  overflow-y: hidden;
-  max-width: 100%;
+  display: block !important;
+  overflow-x: auto !important;
+  overflow-y: hidden !important;
+  max-width: 100% !important;
   padding: 4px 0;
+  -webkit-overflow-scrolling: touch;
+}
+.card-body,
+.card-text {
+  min-width: 0;
+  max-width: 100%;
 }
 .card-text mjx-container {
   max-width: 100%;
